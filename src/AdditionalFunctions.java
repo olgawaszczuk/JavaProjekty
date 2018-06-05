@@ -58,7 +58,7 @@ public abstract class AdditionalFunctions implements Serializable {
         }
         return mySecondList;
     }
-
+//Usuwa 'wąskie gardła' i zostawia tylko te projekty, które łączą się w graf pełny
     private static ArrayList<ArrayList<Integer>> buildFullGraph (ArrayList<ArrayList<Integer>> input) {
         ArrayList<ArrayList<Integer>> myList = input;
         int narrowestThroat = narrowestThroatNum(myList);
@@ -76,12 +76,14 @@ public abstract class AdditionalFunctions implements Serializable {
         }
         return myList;
     }
-
+    //Z użyciem listy powiązań i pełnego grafu, buduje listę wszystkich projektów znajdujących się w pełnym grafie
     public static ArrayList<Integer> fullGraph (ArrayList<ArrayList<Integer>> connectionList, int initialNodeInd) {
         ArrayList<ArrayList<Integer>> commonNodes = getCommonNodes(connectionList, initialNodeInd);
         ArrayList<ArrayList<Integer>> allNodes = buildFullGraph(commonNodes);
         return  allNodes.get(0);
     }
+    
+    //Znajduje wszystkie unikalne, pełne grafy dla zbioru
     public static ArrayList<ArrayList<Integer>> listAllFullGraphs (ArrayList<ArrayList<Integer>> connectionList) {
         ArrayList<ArrayList<Integer>> output = new ArrayList<ArrayList<Integer>>();
         for (int i=0; i<connectionList.size(); i++) {
