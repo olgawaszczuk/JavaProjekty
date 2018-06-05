@@ -1,0 +1,1 @@
+Wychwytywanie grafów pełnych
