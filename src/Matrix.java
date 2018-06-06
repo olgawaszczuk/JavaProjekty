@@ -26,9 +26,8 @@ public class Matrix {
 			ResultData.add( new ArrayList<Double>() );
 			for (int j = 0; j < MatrixFactor.ncol(); j++) {
 				double sum = 0;
-				for (int k = 0; k < ncol(); k++) {
-					sum += data.get(i).get(k) * FactorData.get(k).get(j);
-				}
+				int colnum = ncol();
+				for (int k = 0; k < colnum; k++) sum += data.get(i).get(k) * FactorData.get(k).get(j);
 				ResultData.get(i).add(sum);
 			}
 		}
@@ -42,7 +41,8 @@ public class Matrix {
 		int colnum = ncol();
 		for (int i = 0; i < colnum; i++) {
 			ResultData.add(new ArrayList<Double>());
-			for (int j = 0; j < nrow(); j++) {
+			int rownum = nrow();
+			for (int j = 0; j < rownum; j++) {
 				ResultData.get(i).add(data.get(j).get(i));
 			}
 		}
@@ -57,7 +57,7 @@ public class Matrix {
 			for (Double element : vector) {
 				System.out.print(element.toString() + ", ");
 			}
-			System.out.print("\n");
+			System.out.print("\b\b\n");
 		}
 		System.out.print("\n");
 	}
