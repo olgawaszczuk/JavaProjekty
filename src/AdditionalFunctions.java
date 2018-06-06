@@ -130,7 +130,7 @@ public abstract class AdditionalFunctions implements Serializable {
     }
 
 
-
+//Funkcja przypisująca każdemu projektowi wszystkie projekty, z którymi bezpośrednio realizuje on więcej niż 6 celów.
     public static int[][] getConnections(Matrix inputMatrix) {
         int irow = 0;
         int icol = 0;
@@ -160,7 +160,7 @@ public abstract class AdditionalFunctions implements Serializable {
         return connectionsMatrix;
     }
 
-
+//Funkcja przeszukująca dany wiersz macierzy w poszukiwaniu wszystkich powiązań pośrednich w grafie
     public static ArrayList<Integer> getStringForRow(int[][] connectionsMatrix, int project) {
         int numOfProjects = connectionsMatrix.length;
         ArrayList<Integer> connections = new ArrayList<>();
@@ -170,7 +170,8 @@ public abstract class AdditionalFunctions implements Serializable {
 
         return connections;
     }
-
+    
+// Funkcja pomocnicza. Zaznacza, które projekty zostały rozpatrzone i dopisuje połączenia które istnieją 
     private static void getConnections(int[][] connectionsMatrix, int project, ArrayList<Integer> connections, ArrayList<Integer> searched) {
         for (int connection : connectionsMatrix[project]) {
             if (searched.indexOf(connection) ==-1 && connection != -1) {
@@ -181,6 +182,7 @@ public abstract class AdditionalFunctions implements Serializable {
         }
     }
 
+// Funkcja pomocnicza. Dopisuje połączenia.
     private static void addProjectToConnections(ArrayList<Integer> connections, int project) {
         if (connections.indexOf(project) == -1) {
             connections.add(project);
