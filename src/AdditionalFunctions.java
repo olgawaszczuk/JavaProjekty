@@ -7,7 +7,7 @@ public abstract class AdditionalFunctions implements Serializable {
 
 
     //Zwraca listę list połączeń z macierzy XtX, dla każdego kolejnego projektu, przy progu wspólnych projektów równym threshold
-    public static ArrayList<ArrayList<Integer>> getConnectionLists(Matrix inputMatrix, double threshold) {
+    private static ArrayList<ArrayList<Integer>> getConnectionLists(Matrix inputMatrix, double threshold) {
         ArrayList<ArrayList<Double>> data = inputMatrix.getData();
         ArrayList<ArrayList<Integer>> outputList = new ArrayList<ArrayList<Integer>>();
         int nrow = inputMatrix.nrow();
@@ -58,7 +58,7 @@ public abstract class AdditionalFunctions implements Serializable {
         }
         return mySecondList;
     }
-//Usuwa 'wąskie gardła' i zostawia tylko te projekty, które łączą się w graf pełny
+
     private static ArrayList<ArrayList<Integer>> buildFullGraph (ArrayList<ArrayList<Integer>> input) {
         ArrayList<ArrayList<Integer>> myList = input;
         int narrowestThroat = narrowestThroatNum(myList);
@@ -76,20 +76,23 @@ public abstract class AdditionalFunctions implements Serializable {
         }
         return myList;
     }
-    //Z użyciem listy powiązań i pełnego grafu, buduje listę wszystkich projektów znajdujących się w pełnym grafie
-    public static ArrayList<Integer> fullGraph (ArrayList<ArrayList<Integer>> connectionList, int initialNodeInd) {
+
+    private static ArrayList<Integer> fullGraph (ArrayList<ArrayList<Integer>> connectionList, int initialNodeInd) {
         ArrayList<ArrayList<Integer>> commonNodes = getCommonNodes(connectionList, initialNodeInd);
         ArrayList<ArrayList<Integer>> allNodes = buildFullGraph(commonNodes);
         return  allNodes.get(0);
     }
-    
-    //Znajduje wszystkie unikalne, pełne grafy dla zbioru
-    public static ArrayList<ArrayList<Integer>> listAllFullGraphs (ArrayList<ArrayList<Integer>> connectionList) {
+
+    //Docelowa funkcja
+    public static ArrayList<ArrayList<Integer>> listAllFullGraphs (Matrix inputMatrix) {
+        Matrix XtX = inputMatrix.transpose().dotProduct(inputMatrix);
+        ArrayList<ArrayList<Integer>> connectionList = getConnectionLists(XtX, 6);
         ArrayList<ArrayList<Integer>> output = new ArrayList<ArrayList<Integer>>();
-        for (int i=0; i<connectionList.size(); i++) {
+        int conListSize = connectionList.size();
+        for (int i=0; i<conListSize; i++) {
             ArrayList<Integer> tempList = fullGraph(connectionList, i);
             Collections.sort(tempList);
-            if (!output.contains(tempList)) output.add(tempList);
+            if (!output.contains(tempList) && tempList.size()>1) output.add(tempList);
         }
         return output;
     }
@@ -97,7 +100,8 @@ public abstract class AdditionalFunctions implements Serializable {
     //Zwraca indeks projektu o oznaczeniu num
     private static int projectNumToIndice (ArrayList<ArrayList<Integer>> input, int num) {
         int output = 0;
-        for (int i=0; i<input.size(); i++) {
+        int inpSize = input.size();
+        for (int i=0; i<inpSize; i++) {
             if (input.get(i).get(0)==num) {
                 output = i;
                 break;
@@ -110,11 +114,14 @@ public abstract class AdditionalFunctions implements Serializable {
     private static int narrowestThroatNum (ArrayList<ArrayList<Integer>> input) {
         int minimum = input.get(0).size();
         int output = 0;
+        int rowSize;
         for (ArrayList<Integer> row : input) {
-            if (row.size() < minimum) minimum = row.size();
+            rowSize = row.size();
+            if (rowSize < minimum) minimum = rowSize;
         }
         for (ArrayList<Integer> row : input) {
-            if (row.size() == minimum) {
+            rowSize = row.size();
+            if (rowSize == minimum) {
                 output = row.get(0);
                 break;
             }
@@ -122,17 +129,16 @@ public abstract class AdditionalFunctions implements Serializable {
         return output;
     }
 
-/*
 
 
-    public static int[][] getConnections(Matrix inputMatrix, double threshold) {
+    public static int[][] getConnections(Matrix inputMatrix) {
         int irow = 0;
         int icol = 0;
         int iproject = 0;
         int mSizeRow = inputMatrix.nrow();
         int mSizeCol = inputMatrix.ncol();
         int[][] connectionsMatrix = new int[mSizeRow][mSizeCol];
-        double factor = threshold;
+        double factor = 6;
         ArrayList<ArrayList<Double>> data = inputMatrix.getData();
         for (ArrayList<Double> row : data) {
             icol = 0;
@@ -181,6 +187,5 @@ public abstract class AdditionalFunctions implements Serializable {
         }
     }
 
-*/
 
 }
